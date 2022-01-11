@@ -3,6 +3,8 @@ import NeatNeural.neat.Client;
 import NeatNeural.neat.Neat;
 import Game.BoardNotUI;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 
@@ -16,15 +18,15 @@ public class MainBot {
     public void main(Neat neat, int size){
         int numbretest = 10;
         long begin = System.currentTimeMillis();
+        ExecutorService pool = Executors.newFixedThreadPool(100);  
         while(true){
             Client best = neat.getBest();
             System.out.println(best.getScore());
             sem2 = new Semaphore(-size);
             long l1 = System.currentTimeMillis();
             for(Client c:neat.getClients().getData()){
-                Simulation si = new Simulation(c, numbretest, l1);
-                Thread ne = new Thread(si);
-                ne.start();                
+                Runnable si = new Simulation(c, numbretest, l1);
+                pool.execute(si);              
             }
             sem2.release();
             try {
@@ -80,7 +82,6 @@ public class MainBot {
             score /= numbretest;
             c.setScore(score);
             sem2.release(); 
-            Thread.currentThread().interrupt();
         }
     }
 }

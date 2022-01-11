@@ -2,8 +2,6 @@ package Game;
 import NeatNeural.genome.Genome;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Random;
 

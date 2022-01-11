@@ -25,10 +25,8 @@ public class UI extends JPanel
         window.setVisible(true);
 
         state = new int[x][y];
-        for (int i = 0; i < state.length; i++)
-        {
-            for (int j = 0; j < state[i].length; j++)
-            {
+        for (int i = 0; i < state.length; i++){
+            for (int j = 0; j < state[i].length; j++){
                 state[i][j] = -1;
             }
         }
