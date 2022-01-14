@@ -9,24 +9,29 @@ import java.util.concurrent.Semaphore;
 
 
 public class MainBot {
-    public boolean foodOnly = false;
-    public boolean diagonl = false;
-    private long timeSave = 100000;
+    public boolean foodOnly = true;
+    private long timeSave = 900000;
     private Semaphore sem2;
-    private static String path = "Try.network";
+    private static String path = "night_test.network";
 
     public void main(Neat neat, int size){
         int numbretest = 10;
         long begin = System.currentTimeMillis();
-        ExecutorService pool = Executors.newFixedThreadPool(100);  
+        ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()-1);  
         while(true){
             Client best = neat.getBest();
             System.out.println(best.getScore());
+            if(best.getScore() > 10){
+                foodOnly = false;
+            }
+            else{
+                foodOnly = true;
+            }
             sem2 = new Semaphore(-size);
             long l1 = System.currentTimeMillis();
             for(Client c:neat.getClients().getData()){
                 Runnable si = new Simulation(c, numbretest, l1);
-                pool.execute(si);              
+                pool.execute(si);    
             }
             sem2.release();
             try {
@@ -47,24 +52,16 @@ public class MainBot {
     }
     
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        System.gc();
-        int size =  5000;
-        Neat neat = new Neat(9,4,size);/*
-        neat.setCP(1);
-        neat.setPROBABILITY_MUTATE_WEIGHT_RANDOM(0.12);
-        neat.setPROBABILITY_MUTATE_WEIGHT_SHIFT(0.4);
-        neat.setPROBABILITY_MUTATE_LINK(0.5);
-        neat.setPROBABILITY_MUTATE_NODE(0.1);
-        neat.setPROBABILITY_MUTATE_TOGGLE_LINK(.1);
-        neat.setSURVIVORS(.3);*/
-        neat = Neat.load(path   );
+        int size =  10000;
+        Neat neat = new Neat(9,4,size);
+        neat = Neat.load(path);
         new MainBot().main(neat, size);
     }
 
     class Simulation implements Runnable{
-        private Client c;
-        private int numbretest;
-        private long seed;
+        private final Client c;
+        private final int numbretest;
+        private final long seed;
 
         public Simulation(Client c, int numbretest, long seed){
             this.c = c;
@@ -76,7 +73,7 @@ public class MainBot {
         public void run() {
             double score = 0;
             for(int i = 0; i < numbretest; i++){
-                BoardNotUI b = new BoardNotUI(20,20,c.getGenome(),seed+i).setfoodOnly(foodOnly).setdiagonality(diagonl);
+                BoardNotUI b = new BoardNotUI(40,40,c.getGenome(),seed+i).setfoodOnly(foodOnly);
                 score += b.gameLoop();
             }
             score /= numbretest;

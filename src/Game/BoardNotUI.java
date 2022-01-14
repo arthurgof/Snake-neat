@@ -154,8 +154,8 @@ public class BoardNotUI {
 
     private double [] obtainInput(){
         double [] input = new double[9];
-        int headx = snakes.get(snakes.size() - 1)[0];
-        int heady = snakes.get(snakes.size() - 1)[1];
+        int headx = snakes.getLast()[0];
+        int heady = snakes.getLast()[1];
         if (headx > food[0])
             input[0] = 1;
         if(headx < food[0])

@@ -2,7 +2,11 @@ package Game;
 import NeatNeural.genome.Genome;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 public class Board {
@@ -15,7 +19,6 @@ public class Board {
     private boolean bots;
     private final Genome ann;
     private boolean foodOnly = true;
-    private boolean diagonal = false;
     private Random rand;
 
 
@@ -26,6 +29,10 @@ public class Board {
 
     public Board(Genome ann, long seed) {
         this(40,40, ann, seed);
+    }
+
+    public Board(int a, int b, Genome ann){
+        this(a, b, ann, System.currentTimeMillis());
     }
 
     Board(int a, int b, long seed){
@@ -117,6 +124,7 @@ public class Board {
             if(snakes.size() != size){
                 size = snakes.size();
             }
+            this.obtainInput();
             score++;
             if(bots){
                 double [] result = ann.calculate(this.obtainInput());
@@ -202,8 +210,8 @@ public class Board {
 
     private double [] obtainInput(){
         double [] input = new double[9];
-        int headx = snakes.get(snakes.size() - 1)[0];
-        int heady = snakes.get(snakes.size() - 1)[1];
+        int headx = snakes.getLast()[0];
+        int heady = snakes.getLast()[1];
         if (headx > food[0])
             input[0] = 1;
         if(headx < food[0])
@@ -245,101 +253,55 @@ public class Board {
             }
         }
         if(foodOnly) input[5] = input[6] = input[7] = input[8] = 0;
-        /*
-        if(!diagonal) input[9] = input[10] = input[11] = input[12] = 0;
-        else{
-            double [] diag = this.InputDiagonality(food);
-            input[9] = diag[0];
-            input[10] = diag[1];
-            input[11] = diag[2];
-            input[12] = diag[3];
-        }*/
+        //getAccess();
         return input;
     }
 
-    private double [] InputDiagonality(int [] target){
-        double v1, v2, v3, v4;
-        v1 = v2 = v3 = v4 = -1.;
+    public double[] getAccess(){
+        double [] direction = new double [4];
         int [] head = snakes.getLast();
-        int x = head[0];
-        int y = head[1];
-        while(y < boardgames.length && x < boardgames.length){
-            y++;
-            x++;
-            if(y == target[1] && x == target[0]){
-                v1 /= -(Math.pow(Math.pow(head[0]-target[0],2) + Math.pow(head[1]-target[1],2), .5));
-                break;
+        ArrayList<int []> startPoints = variation(head, new LinkedList<>());
+        for(int [] p : startPoints){
+            LinkedList<int []> ex = new LinkedList<>();
+            LinkedList<int []> queue = new LinkedList<>();
+            queue.add(p);
+            double score = 0;
+            while(!queue.isEmpty()){
+                int [] q = queue.removeLast();
+                ArrayList<int []> collection = variation(q, ex);
+                for(int [] ptr : collection){
+                    if(ptr[0] < 0 || ptr[0] >= boardgames.length || ptr[1] < 0 || ptr[1] >= boardgames.length)
+                        continue;
+                    if(boardgames[ptr[0]][ptr[1]] == 0 || boardgames[ptr[0]][ptr[1]] == 2){
+                        queue.add(ptr);
+                        ex.add(ptr);
+                    }
+                }
             }
-            boolean colitions = false;
-            for(int [] tail : snakes)
-                if(tail[0] == x && tail[1] == y) colitions = true;
-            if(colitions){
-                v1 /= Math.pow(Math.pow(x - head[0], 2) + Math.pow(y - head[1], 2),.5);
-                break;
-            }
+            direction[startPoints.indexOf(p)] = score/(Math.pow(boardgames.length, 2) - snakes.size());
         }
-        x = head[0];
-        y = head[1];
-        while(y > 0 && x < boardgames.length){
-            y--;
-            x++;
-            if(y == target[1] && x == target[0]){
-                v2 /= -(Math.pow(Math.pow(head[0]-target[0],2) + Math.pow(head[1]-target[1],2), .5));
-                break;
-            }
-            boolean colitions = false;
-            for(int [] tail : snakes)
-                if(tail[0] == x && tail[1] == y) colitions = true;
-            if(colitions){
-                v2 /= Math.pow(Math.pow(x - head[0], 2) + Math.pow(y - head[1], 2),.5);
-                break;
-            }
-        }
-        x = head[0];
-        y = head[1];
-        while(y > 0 && x  > 0){
-            y--;
-            x--;
-            if(y == target[1] && x == target[0]){
-                v3 /= -(Math.pow(Math.pow(head[0]-target[0],2) + Math.pow(head[1]-target[1],2), .5));
-                break;
-            }
-            boolean colitions = false;
-            for(int [] tail : snakes)
-                if(tail[0] == x && tail[1] == y) colitions = true;
-            if(colitions){
-                v3 /= Math.pow(Math.pow(x - head[0], 2) + Math.pow(y - head[1], 2),.5);
-                break;
-            }
-        }
-        x = head[0];
-        y = head[1];
-        while(x > 0 && y < boardgames.length){
-            y++;
-            x--;
-            if(y == target[1] && x == target[0]){
-                v4 /= -(Math.pow(Math.pow(head[0]-target[0],2) + Math.pow(head[1]-target[1],2), .5));
-                break;
-            }
-            boolean colitions = false;
-            for(int [] tail : snakes)
-                if(tail[0] == x && tail[1] == y) colitions = true;
-            if(colitions){
-                v4 /= Math.pow(Math.pow(x - head[0], 2) + Math.pow(y - head[1], 2),.5);
-                break;
-            }
-        }
+        return direction;
+    }
 
-        return new double[]{v1, v2, v3, v4};
+    public ArrayList<int []> variation(int [] point, LinkedList<int []> explore){
+        ArrayList<int []> collection = new ArrayList<>();
+        int [] p1 = new int[]{point[0] + 1, point[1]};int [] p2 = new int[]{point[0] - 1, point[1]};int [] p3 = new int[]{point[0], point[1] + 1};int [] p4 = new int[]{point[0], point[1] - 1};
+        collection.add(p1); collection.add(p2); collection.add(p3); collection.add(p4);
+        ArrayList<int []> rm = new ArrayList<>();
+        for(int [] t1 : explore){
+            for(int [] t2 : collection){
+                if(t1[0] == t2[0] && t1[1] == t2[1]){
+                    rm.add(t2);
+                }
+            }
+        }
+        for(int [] t1 : rm)
+            collection.remove(t1);
+        return collection;
     }
 
     public Board setfoodOnly(boolean a){
         this.foodOnly = a;
-        return this;
-    }
-
-    public Board setdiagonality(boolean a){
-        this.diagonal = a;
         return this;
     }
 }
