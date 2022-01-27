@@ -200,54 +200,71 @@ public class BoardNotUI {
             }
         }
         if(foodOnly) input[5] = input[6] = input[7] = input[8] = 0;
-        if(!diagonal) input[9] = input[10] = input[11] = input[12] = 0;
-        else{
-            double [] diag = this.reachable(food);
-            input[9] = diag[0];
-            input[10] = diag[1];
-            input[11] = diag[2];
-            input[12] = diag[3];
-        }
+        double [] diag = this.reachable(food);
+        input[9] = diag[0]/((boardgames.length*boardgames.length) - snakes.size());
+        input[10] = diag[1]/((boardgames.length*boardgames.length) - snakes.size());
+        input[11] = diag[2]/((boardgames.length*boardgames.length) - snakes.size());
+        input[12] = diag[3]/((boardgames.length*boardgames.length) - snakes.size());
         return input;
     }
 
     private double [] reachable(int [] target){
-        double v1, v2, v3, v4;
-        v1 = v2 = v3 = v4 = 0;
+        double [] score = new double[]{0, 0, 0, 0};
         int [] headd = snakes.getLast();
         ArrayList<int []> heads = generatedirection(headd);
+        int index = 0;
         for(int [] head : heads){
+            if(!(head[0] >= 0 && head[0] < boardgames.length && 
+            head[1] >= 0 && head[1] < boardgames.length))
+                continue;
             HashMap<Integer, ArrayList<Integer>> explore = new HashMap<>();
             ArrayList<Integer> y  = new ArrayList<>();
             y.add(head[1]);
             explore.put(head[0], y);
+            for(int [] poin : snakes){
+                if(explore.containsKey(poin[0])){
+                    if(!explore.get(poin[0]).contains(poin[1])){
+                        explore.get(poin[0]).add(poin[1]);
+                    }
+                }
+                else{
+                    ArrayList<Integer> y1  = new ArrayList<>();
+                    y1.add(poin[1]);
+                    explore.put(poin[0], y1);
+                }
+            
+            }
             LinkedList<int []> next = new LinkedList<>();
             next.add(head);
-            while(next.isEmpty()){
-                v1++;
+            while(!next.isEmpty()){
+                score[index]++;
                 int [] pointer = next.removeLast();
                 ArrayList<int []> alld = generatedirection(pointer);
                 for(int [] poin : alld){
                     if(poin[0] >= 0 && poin[0] < boardgames.length && 
                     poin[1] >= 0 && poin[1] < boardgames.length){
-                        if(explore.containsKey(poin[0]) &&
-                        !explore.get(poin[0]).contains(poin[1])){
-                            explore.get(poin[0]).add(poin[1]);
-                            next.add(poin);
+                        if(explore.containsKey(poin[0])){
+                            if(!explore.get(poin[0]).contains(poin[1])){
+                                explore.get(poin[0]).add(poin[1]);
+                                next.add(poin);
+                            }
                         }
                         else{
                             ArrayList<Integer> y1  = new ArrayList<>();
-                            y1.add(head[1]);
-                            explore.put(head[0], y1);
+                            y1.add(poin[1]);
+                            explore.put(poin[0], y1);
                             next.add(poin);
                         }
                     }
                 }
             }
-            System.out.println(v1);
-            break;
+            if(score[0] == (boardgames.length*boardgames.length) - snakes.size()){
+                System.out.println("tee");
+                return new double[]{score[0],score[0],score[0],score[0]};
+            }
+            index ++;
         }
-        return new double[]{v1, v2, v3, v4};
+        return score;
     }
 
     private ArrayList<int []> generatedirection(int [] headd){
