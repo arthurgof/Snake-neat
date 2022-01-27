@@ -259,7 +259,6 @@ public class BoardNotUI {
                 }
             }
             if(score[0] == (boardgames.length*boardgames.length) - snakes.size()){
-                System.out.println("tee");
                 return new double[]{score[0],score[0],score[0],score[0]};
             }
             index ++;
