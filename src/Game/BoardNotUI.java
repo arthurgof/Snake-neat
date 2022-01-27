@@ -15,8 +15,6 @@ public class BoardNotUI {
     private int [] food;
     private boolean bots;
     private final Genome ann;
-    private boolean foodOnly = true;
-    private boolean diagonal = false;
     private Random rand;
 
     public BoardNotUI(int a, int b, Genome ann, long seed){
@@ -156,7 +154,7 @@ public class BoardNotUI {
     }
 
     private double [] obtainInput(){
-        double [] input = new double[13];
+        double [] input = new double[8];
         int headx = snakes.getLast()[0];
         int heady = snakes.getLast()[1];
         if (headx > food[0])
@@ -167,7 +165,6 @@ public class BoardNotUI {
             input[2] = 1;
         if(heady < food[1])
             input[3] = 1;
-        input[4] = 1;
         int size = boardgames.length;
         for(int distance = size; distance > 0; distance--) {
             int[] tr1 = new int[]{headx + distance, heady};
@@ -176,35 +173,30 @@ public class BoardNotUI {
             int[] tr4 = new int[]{headx, heady - distance};
             for (int[] b : snakes) {
                 if ((tr1[0] == b[0] && tr1[1] == b[1]) || tr1[0] >= size) {
-                    input[5] = 1. / distance;
+                    input[4] = 1. / distance;
                     break;
                 }
             }
             for (int[] b : snakes) {
                 if ((tr2[0] == b[0] && tr2[1] == b[1]) || tr2[1] >= size) {
-                    input[6] = 1. / distance;
+                    input[5] = 1. / distance;
                     break;
                 }
             }
             for (int[] b : snakes) {
                 if ((tr3[0] == b[0] && tr3[1] == b[1]) || tr3[0] < 0) {
-                    input[7] = 1. / distance;
+                    input[6] = 1. / distance;
                     break;
                 }
             }
             for (int[] b : snakes) {
                 if ((tr4[0] == b[0] && tr4[1] == b[1]) || tr4[1] < 0) {
-                    input[8] = 1. / distance;
+                    input[7] = 1. / distance;
                     break;
                 }
             }
+            
         }
-        if(foodOnly) input[5] = input[6] = input[7] = input[8] = 0;
-        double [] diag = this.reachable(food);
-        input[9] = diag[0]/((boardgames.length*boardgames.length) - snakes.size());
-        input[10] = diag[1]/((boardgames.length*boardgames.length) - snakes.size());
-        input[11] = diag[2]/((boardgames.length*boardgames.length) - snakes.size());
-        input[12] = diag[3]/((boardgames.length*boardgames.length) - snakes.size());
         return input;
     }
 
@@ -273,16 +265,5 @@ public class BoardNotUI {
         heads.add(new int []{headd[0],headd[1]+1});
         heads.add(new int []{headd[0],headd[1]-1});
         return heads;
-    }
-
-    public BoardNotUI setfoodOnly(boolean a){
-        this.foodOnly = a;
-        return this;
-    }
-
-    public BoardNotUI setdiagonality(boolean a){
-        this.diagonal = a;
-        return this;
-    }
-        
+    }        
 }

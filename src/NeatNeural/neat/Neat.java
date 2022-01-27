@@ -225,8 +225,6 @@ public class Neat implements java.io.Serializable{
     }
 
     public void evolve() {
-        Client s = this.getBest();
-        this.clients.remove(s);
         gen_species();
         kill();
         remove_extinct_species();
@@ -235,14 +233,23 @@ public class Neat implements java.io.Serializable{
         for(Client c:clients.getData()){
             c.generate_calculator();
         }
-        this.clients.add(s);
     }
 
     public void printSpecies() {
+        double max = -1;
+        double min = Integer.MAX_VALUE;
+        double avg = 0;
         System.out.println("##########################################");
         for(Species s:this.species.getData()){
-            System.out.println(s + "  " + s.getScore() + "  " + s.size());
+            if(s.getScore() > max)
+                max = s.getScore();
+            if(s.getScore() < min)
+                min = s.getScore();
+            avg += s.getScore() * s.size();
         }
+        System.out.println("Min : "+ min);
+        System.out.println("Max : "+ max);
+        System.out.println("Avg : "+ avg/max_clients);
     }
 
     private void reproduce() {

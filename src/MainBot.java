@@ -1,4 +1,3 @@
-
 import NeatNeural.neat.Client;
 import NeatNeural.neat.Neat;
 import Game.BoardNotUI;
@@ -15,18 +14,11 @@ public class MainBot {
     private static String path = "night_test.network";
 
     public void main(Neat neat, int size){
-        int numbretest = 10;
+        int numbretest = 5;
         long begin = System.currentTimeMillis();
-        ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()-1);  
+        ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()+1);  
         while(true){
-            Client best = neat.getBest();
-            System.out.println(best.getScore());
-            if(best.getScore() > 10){
-                foodOnly = false;
-            }
-            else{
-                foodOnly = true;
-            }
+            neat.printSpecies();
             sem2 = new Semaphore(-size);
             long l1 = System.currentTimeMillis();
             for(Client c:neat.getClients().getData()){
@@ -52,9 +44,9 @@ public class MainBot {
     }
     
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        int size =  10000;
-        Neat neat = new Neat(9,4,size);
-        neat = Neat.load(path);
+        int size =  5000;
+        Neat neat = new Neat(8, 4, size);
+        //neat = Neat.load(path);
         new MainBot().main(neat, size);
     }
 
@@ -73,7 +65,7 @@ public class MainBot {
         public void run() {
             double score = 0;
             for(int i = 0; i < numbretest; i++){
-                BoardNotUI b = new BoardNotUI(40,40,c.getGenome(),seed+i).setfoodOnly(foodOnly);
+                BoardNotUI b = new BoardNotUI(40,40,c.getGenome(),seed+i);
                 score += b.gameLoop();
             }
             score /= numbretest;
