@@ -34,6 +34,10 @@ public class Frame extends JFrame {
         this.setVisible(false);
     }
 
+    
+    /** 
+     * @param genome
+     */
     public void setGenome(Genome genome){
         panel.setGenome(genome);
         this.genome = genome;

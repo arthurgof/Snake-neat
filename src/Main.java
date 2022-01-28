@@ -3,11 +3,17 @@ import NeatNeural.neat.Neat;
 import java.io.IOException;
 
 public class Main {
+    
+    /** 
+     * @param args
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         //new Board().gameLoop();
         Neat now = Neat.load("night_test.network");
-        System.out.println(now.getClients().getData().get(0).getScore());
-        System.out.println(new Board(30,30,now.getBest().getGenome()).setfoodOnly(false).gameLoop());
+        System.out.println(now.getBest().getScore());
+        System.out.println(new Board(40,40,now.getBest().getGenome()).setfoodOnly(false).gameLoop());
         System.exit(10);
     }
 }

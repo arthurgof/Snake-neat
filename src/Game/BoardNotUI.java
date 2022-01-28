@@ -63,6 +63,10 @@ public class BoardNotUI {
         if(boardgames[food[0]][food[1]] == 1) foodSpawn();
     }
 
+    
+    /** 
+     * @return boolean
+     */
     private boolean eat() {
         int [] headd = snakes.getLast();
         int [] position;
@@ -102,6 +106,10 @@ public class BoardNotUI {
         }
     }
 
+    
+    /** 
+     * @return int
+     */
     public int gameLoop() {
         int size = 1;
         int trun = 0;
@@ -153,6 +161,10 @@ public class BoardNotUI {
         return snakes.size();
     }
 
+    
+    /** 
+     * @return double[]
+     */
     private double [] obtainInput(){
         double [] input = new double[8];
         int headx = snakes.getLast()[0];
@@ -200,6 +212,11 @@ public class BoardNotUI {
         return input;
     }
 
+    
+    /** 
+     * @param target
+     * @return double[]
+     */
     private double [] reachable(int [] target){
         double [] score = new double[]{0, 0, 0, 0};
         int [] headd = snakes.getLast();
@@ -258,6 +275,11 @@ public class BoardNotUI {
         return score;
     }
 
+    
+    /** 
+     * @param headd
+     * @return ArrayList<int[]>
+     */
     private ArrayList<int []> generatedirection(int [] headd){
         ArrayList<int []> heads = new ArrayList<>();
         heads.add(new int []{headd[0]+1,headd[1]});

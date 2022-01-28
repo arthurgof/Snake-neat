@@ -32,6 +32,10 @@ public class UI extends JPanel
         }
     }
 
+    
+    /** 
+     * @param g
+     */
     // Paint function, called by the system if required for a new frame, uses the state stored by the UI class
     public void paintComponent(Graphics g)
     {
@@ -62,6 +66,11 @@ public class UI extends JPanel
         }
     }
 
+    
+    /** 
+     * @param i
+     * @return Color
+     */
     // Decodes the ID of a pentomino into a color
     private Color GetColorOfID(int i)
     {
@@ -70,6 +79,10 @@ public class UI extends JPanel
         else return Color.RED;
     }
 
+    
+    /** 
+     * @param _state
+     */
     // This function should be called to update the displayed state (Makes a copy)
     public void setState(int[][] _state)
     {
@@ -83,6 +96,10 @@ public class UI extends JPanel
         repaint();
     }
 
+    
+    /** 
+     * @return Component
+     */
     public Component getWindow() {
         return window;
     }

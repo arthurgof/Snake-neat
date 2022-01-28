@@ -14,14 +14,26 @@ public class Panel extends JPanel {
     public Panel() {
     }
 
+    
+    /** 
+     * @return Genome
+     */
     public Genome getGenome() {
         return genome;
     }
 
+    
+    /** 
+     * @param genome
+     */
     public void setGenome(Genome genome) {
         this.genome = genome;
     }
 
+    
+    /** 
+     * @param g
+     */
     @Override
     protected void paintComponent(Graphics g) {
         g.clearRect(0,0,10000,10000);
@@ -39,6 +51,11 @@ public class Panel extends JPanel {
 
     }
 
+    
+    /** 
+     * @param n
+     * @param g
+     */
     private void paintNode(NodeGene n, Graphics2D g){
         g.setColor(Color.gray);
         g.setStroke(new BasicStroke(3));
@@ -46,6 +63,11 @@ public class Panel extends JPanel {
                 (int)(this.getHeight() * n.getY()) - 10,20,20);
     }
 
+    
+    /** 
+     * @param c
+     * @param g
+     */
     private void paintConnection(ConnectionGene c, Graphics2D g){
         g.setColor(c.isEnabled() ? Color.green:Color.red);
         g.setStroke(new BasicStroke(3));

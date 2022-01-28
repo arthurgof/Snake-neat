@@ -6,6 +6,10 @@ import java.util.Random;
 
 public class Example{
 
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         xor();
     }
@@ -27,6 +31,10 @@ public class Example{
         }
     }
     private static Long GDseed;
+    
+    /** 
+     * @param seed
+     */
     public static void xor(long seed) {
         Random random = new Random(seed);
         int[] structure = {2, 4, 1};

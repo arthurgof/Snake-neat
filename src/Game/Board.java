@@ -88,6 +88,10 @@ public class Board {
         if(boardgames[food[0]][food[1]] == 1) foodSpawn();
     }
 
+    
+    /** 
+     * @return boolean
+     */
     private boolean eat() {
         int [] head = snakes.getLast();
         int [] position = switch (direction) {
@@ -117,6 +121,10 @@ public class Board {
         }
     }
 
+    
+    /** 
+     * @return int
+     */
     public int gameLoop(){
         int size = 1;
         int score = 0;
@@ -208,8 +216,12 @@ public class Board {
         return snakes.size();
     }
 
+    
+    /** 
+     * @return double[]
+     */
     private double [] obtainInput(){
-        double [] input = new double[9];
+        double [] input = new double[8];
         int headx = snakes.getLast()[0];
         int heady = snakes.getLast()[1];
         if (headx > food[0])
@@ -220,7 +232,6 @@ public class Board {
             input[2] = 1;
         if(heady < food[1])
             input[3] = 1;
-        input[4] = 1;
         int size = boardgames.length;
         for(int distance = size; distance > 0; distance--) {
             int[] tr1 = new int[]{headx + distance, heady};
@@ -229,77 +240,117 @@ public class Board {
             int[] tr4 = new int[]{headx, heady - distance};
             for (int[] b : snakes) {
                 if ((tr1[0] == b[0] && tr1[1] == b[1]) || tr1[0] >= size) {
-                    input[5] = 1. / distance;
+                    input[4] = 1. / distance;
                     break;
                 }
             }
             for (int[] b : snakes) {
                 if ((tr2[0] == b[0] && tr2[1] == b[1]) || tr2[1] >= size) {
-                    input[6] = 1. / distance;
+                    input[5] = 1. / distance;
                     break;
                 }
             }
             for (int[] b : snakes) {
                 if ((tr3[0] == b[0] && tr3[1] == b[1]) || tr3[0] < 0) {
-                    input[7] = 1. / distance;
+                    input[6] = 1. / distance;
                     break;
                 }
             }
             for (int[] b : snakes) {
                 if ((tr4[0] == b[0] && tr4[1] == b[1]) || tr4[1] < 0) {
-                    input[8] = 1. / distance;
+                    input[7] = 1. / distance;
                     break;
                 }
             }
+            
         }
-        if(foodOnly) input[5] = input[6] = input[7] = input[8] = 0;
-        //getAccess();
         return input;
     }
 
-    public double[] getAccess(){
-        double [] direction = new double [4];
-        int [] head = snakes.getLast();
-        ArrayList<int []> startPoints = variation(head, new LinkedList<>());
-        for(int [] p : startPoints){
-            LinkedList<int []> ex = new LinkedList<>();
-            LinkedList<int []> queue = new LinkedList<>();
-            queue.add(p);
-            double score = 0;
-            while(!queue.isEmpty()){
-                int [] q = queue.removeLast();
-                ArrayList<int []> collection = variation(q, ex);
-                for(int [] ptr : collection){
-                    if(ptr[0] < 0 || ptr[0] >= boardgames.length || ptr[1] < 0 || ptr[1] >= boardgames.length)
-                        continue;
-                    if(boardgames[ptr[0]][ptr[1]] == 0 || boardgames[ptr[0]][ptr[1]] == 2){
-                        queue.add(ptr);
-                        ex.add(ptr);
+    
+    /** 
+     * @param target
+     * @return double[]
+     */
+    private double [] reachable(int [] target){
+        double [] score = new double[]{0, 0, 0, 0};
+        int [] headd = snakes.getLast();
+        ArrayList<int []> heads = generatedirection(headd);
+        int index = 0;
+        for(int [] head : heads){
+            if(!(head[0] >= 0 && head[0] < boardgames.length && 
+            head[1] >= 0 && head[1] < boardgames.length))
+                continue;
+            HashMap<Integer, ArrayList<Integer>> explore = new HashMap<>();
+            ArrayList<Integer> y  = new ArrayList<>();
+            y.add(head[1]);
+            explore.put(head[0], y);
+            for(int [] poin : snakes){
+                if(explore.containsKey(poin[0])){
+                    if(!explore.get(poin[0]).contains(poin[1])){
+                        explore.get(poin[0]).add(poin[1]);
+                    }
+                }
+                else{
+                    ArrayList<Integer> y1  = new ArrayList<>();
+                    y1.add(poin[1]);
+                    explore.put(poin[0], y1);
+                }
+            
+            }
+            LinkedList<int []> next = new LinkedList<>();
+            next.add(head);
+            while(!next.isEmpty()){
+                score[index]++;
+                int [] pointer = next.removeLast();
+                ArrayList<int []> alld = generatedirection(pointer);
+                for(int [] poin : alld){
+                    if(poin[0] >= 0 && poin[0] < boardgames.length && 
+                    poin[1] >= 0 && poin[1] < boardgames.length){
+                        if(explore.containsKey(poin[0])){
+                            if(!explore.get(poin[0]).contains(poin[1])){
+                                explore.get(poin[0]).add(poin[1]);
+                                next.add(poin);
+                            }
+                        }
+                        else{
+                            ArrayList<Integer> y1  = new ArrayList<>();
+                            y1.add(poin[1]);
+                            explore.put(poin[0], y1);
+                            next.add(poin);
+                        }
                     }
                 }
             }
-            direction[startPoints.indexOf(p)] = score/(Math.pow(boardgames.length, 2) - snakes.size());
-        }
-        return direction;
-    }
-
-    public ArrayList<int []> variation(int [] point, LinkedList<int []> explore){
-        ArrayList<int []> collection = new ArrayList<>();
-        int [] p1 = new int[]{point[0] + 1, point[1]};int [] p2 = new int[]{point[0] - 1, point[1]};int [] p3 = new int[]{point[0], point[1] + 1};int [] p4 = new int[]{point[0], point[1] - 1};
-        collection.add(p1); collection.add(p2); collection.add(p3); collection.add(p4);
-        ArrayList<int []> rm = new ArrayList<>();
-        for(int [] t1 : explore){
-            for(int [] t2 : collection){
-                if(t1[0] == t2[0] && t1[1] == t2[1]){
-                    rm.add(t2);
-                }
+            if(score[0] == (boardgames.length*boardgames.length) - snakes.size()){
+                System.out.println("tee");
+                return new double[]{score[0],score[0],score[0],score[0]};
             }
+            index ++;
         }
-        for(int [] t1 : rm)
-            collection.remove(t1);
-        return collection;
+        return score;
     }
 
+    
+    /** 
+     * @param headd
+     * @return ArrayList<int[]>
+     */
+    private ArrayList<int []> generatedirection(int [] headd){
+        ArrayList<int []> heads = new ArrayList<>();
+        heads.add(new int []{headd[0]+1,headd[1]});
+        heads.add(new int []{headd[0]-1,headd[1]});
+        heads.add(new int []{headd[0],headd[1]+1});
+        heads.add(new int []{headd[0],headd[1]-1});
+        return heads;
+    }
+
+
+    
+    /** 
+     * @param a
+     * @return Board
+     */
     public Board setfoodOnly(boolean a){
         this.foodOnly = a;
         return this;

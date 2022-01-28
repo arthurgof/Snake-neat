@@ -21,32 +21,69 @@ public final class Utils {
 		Y apply(U u, V v, W w);
 	}
 	
+	
+	/** 
+	 * @param m
+	 * @param precision
+	 */
 	public static void printMatrix(double[][] m, int precision) {
 		System.out.println(matrixToString(m, precision));
 	}
 	
+	
+	/** 
+	 * @param m
+	 */
 	public static void printMatrix(double[][]... m) {
 		for (int i=0; i < m.length; i++)
 			System.out.println(matrixToString(m[i]));
 	}
+	
+	/** 
+	 * @param precision
+	 * @param m
+	 */
 	public static void printMatrix(int precision, double[][]... m) {
 		for (int i=0; i < m.length; i++)
 			System.out.println(matrixToString(m[i], precision));
 	}
 	
+	
+	/** 
+	 * @param v
+	 * @param precision
+	 */
 	public static void printVector(double[] v, int precision) {
 		printMatrix(getColumnVector(v), precision);
 	}
+	
+	/** 
+	 * @param h
+	 * @param precision
+	 */
 	public static void printArray(double[] h, int precision) {
 		printMatrix(getRowVector(h), precision);
 	}
+	
+	/** 
+	 * @param v
+	 */
 	public static void printVector(double[] v) {
 		printMatrix(getColumnVector(v));
 	}
+	
+	/** 
+	 * @param h
+	 */
 	public static void printArray(double[] h) {
 		printMatrix(getRowVector(h));
 	}
 	
+	
+	/** 
+	 * @param string
+	 * @return double[][]
+	 */
 	public static double[][] parseMatrix(String string) {
 		String mstr = string.replaceAll("[\\(\\)\\s\\h\\v]", "");
 		String[] raw_rows = mstr.split("\\]\\[");
@@ -60,6 +97,12 @@ public final class Utils {
 		return matrix;
 	}
 	
+	
+	/** 
+	 * @param m
+	 * @param precision
+	 * @return String
+	 */
 	public static String matrixToString(double[][] m, int precision) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("(");
@@ -77,22 +120,54 @@ public final class Utils {
 		return sb.toString();
 	}
 	
+	
+	/** 
+	 * @param m
+	 * @return String
+	 */
 	public static String matrixToString(double[][] m) {
 		return matrixToString(m, 3);
 	}
+	
+	/** 
+	 * @param v
+	 * @param precision
+	 * @return String
+	 */
 	public static String vectorToString(double[] v, int precision) {
 		return matrixToString(getColumnVector(v), precision);
 	}
+	
+	/** 
+	 * @param h
+	 * @param precision
+	 * @return String
+	 */
 	public static String arrayToString(double[] h, int precision) {
 		return matrixToString(getRowVector(h), precision);
 	}
+	
+	/** 
+	 * @param v
+	 * @return String
+	 */
 	public static String vectorToString(double[] v) {
 		return matrixToString(getColumnVector(v));
 	}
+	
+	/** 
+	 * @param h
+	 * @return String
+	 */
 	public static String arrayToString(double[] h) {
 		return matrixToString(getRowVector(h));
 	}
 	
+	
+	/** 
+	 * @param m
+	 * @return double[][]
+	 */
 	public static double[][] transpose(double[][] m) {
 		double[][] result = new double[m[0].length][m.length];
 		for (int i=0; i < m.length; i++)
@@ -101,12 +176,22 @@ public final class Utils {
 		return result;
 	}
 	
+	
+	/** 
+	 * @param v
+	 * @return double[][]
+	 */
 	public static double[][] getColumnVector(double[] v) {
 		double[][] res = new double[v.length][1];
 		for (int i=0; i < v.length; i++)
 			res[i][0] = v[i];
 		return res;
 	}
+	
+	/** 
+	 * @param h
+	 * @return double[][]
+	 */
 	public static double[][] getRowVector(double[] h) {
 		double[][] res = new double[1][h.length];
 		for (int i=0; i < h.length; i++)
@@ -147,6 +232,12 @@ public final class Utils {
 		return martixMatrixMul(getRowVector(h), m);
 	}
 	
+	
+	/** 
+	 * @param a
+	 * @param b
+	 * @return double[][]
+	 */
 	public static double[][] martixMatrixMul(double[][] a, double[][] b) {
 		// courtesy of a CS1 assignment (code by Pascal Anema)
 		int rowsA = a.length;
@@ -161,6 +252,11 @@ public final class Utils {
 		return result;
 	}
 	
+	
+	/** 
+	 * @param matrix
+	 * @return double[]
+	 */
 	public static double[] unrollMatrix(double[][]... matrix) {
 		List<Double> l = new ArrayList<>();
 		for (int i=0; i < matrix.length; i++)

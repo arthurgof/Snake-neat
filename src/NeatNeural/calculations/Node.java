@@ -22,35 +22,69 @@ public class Node implements Comparable<Node>, java.io.Serializable{
         output = activation_function(s);
     }
 
+    
+    /** 
+     * @param x
+     * @return double
+     */
     private double activation_function(double x){
         return 1d / (1 + Math.exp(-x));
     }
 
+    
+    /** 
+     * @param x
+     */
     public void setX(double x) {
         this.x = x;
     }
 
+    
+    /** 
+     * @param output
+     */
     public void setOutput(double output) {
         this.output = output;
     }
 
+    
+    /** 
+     * @param connections
+     */
     public void setConnections(ArrayList<Connection> connections) {
         this.connections = connections;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getX() {
         return x;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getOutput() {
         return output;
     }
 
+    
+    /** 
+     * @return ArrayList<Connection>
+     */
     public ArrayList<Connection> getConnections() {
         return connections;
     }
 
 
+    
+    /** 
+     * @param o
+     * @return int
+     */
     @Override
     public int compareTo(Node o) {
         if(this.x > o.x) return -1;

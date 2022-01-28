@@ -83,11 +83,22 @@ public class GradientDescent {
         this.acceleration_interval = (acceleration_interval != null)? acceleration_interval : this.acceleration_interval;
     }
 
+    
+    /** 
+     * @param min_lr
+     * @param max_lr
+     */
     public void setMinMaxLR(Double min_lr, Double max_lr) {
         minimum_lr = (min_lr != null)? min_lr : minimum_lr;
         maximum_lr = (max_lr != null)? max_lr : maximum_lr;
     }
 
+    
+    /** 
+     * @param loss_function
+     * @param learning_rate
+     * @param max_iterations
+     */
     public void setLossLrMax(NeuralNetwork.LossFunction loss_function, Double learning_rate, Integer max_iterations) {
         this.loss_function = (loss_function != null)? loss_function : this.loss_function;
         this.learning_rate = (learning_rate != null)? learning_rate : this.learning_rate;
@@ -108,6 +119,13 @@ public class GradientDescent {
         min_loss_advantage = (exploration_threshold != null)? exploration_threshold : min_loss_advantage;
         explorator = (seed != null)? new Random(seed) : explorator;
     }
+    
+    /** 
+     * @param set
+     * @param exploration_magnitude
+     * @param exploration_interval
+     * @param exploration_threshold
+     */
     public void setExploration(boolean set, Double exploration_magnitude, Integer exploration_interval, Double exploration_threshold) {
         setExploration(set, exploration_magnitude, exploration_interval, exploration_threshold, null);
     }
@@ -127,6 +145,10 @@ public class GradientDescent {
         return true;
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean startReuseData() {
         if (is_busy || stored_data_exp.size() == 0) return false;
         reuse_data = true;
@@ -143,6 +165,11 @@ public class GradientDescent {
     }
     private boolean reuse_data = false;
 
+    
+    /** 
+     * @param input
+     * @param target
+     */
     private void trainingStep(double[] input, double[] target) {
         double[] output = model.computeOutput(input);
         double loss_value = loss_function.calculate(output, target);
@@ -180,6 +207,11 @@ public class GradientDescent {
 
     private double[][][] clone_weights = null;
 
+    
+    /** 
+     * @param weights
+     * @param currentNet
+     */
     private void addNetToExp(double[][][] weights, boolean currentNet) {
         if (currentNet && !current_net_added_to_exp) {
             stored_weights_exp.add(weights);
@@ -194,6 +226,11 @@ public class GradientDescent {
         }
     }
 
+    
+    /** 
+     * @param exp_index
+     * @param currentWeights
+     */
     private void setCurrentNet(int exp_index, double[][][] currentWeights) {
         stored_weights_exp.set(current_net_index_exp, currentWeights);
         current_net_index_exp = exp_index;
@@ -202,6 +239,10 @@ public class GradientDescent {
         exploration_replacements++;
     }
 
+    
+    /** 
+     * @param currentWeights
+     */
     private void runExplorationTests(double[][][] currentWeights) {
         setupExplorationModel();
         double min_loss = Double.POSITIVE_INFINITY;
@@ -236,6 +277,11 @@ public class GradientDescent {
             stored_weights_exp.remove(new_index);
     }
 
+    
+    /** 
+     * @param weights
+     * @return double[][][]
+     */
     private double[][][] cloneWeights(double[][][] weights) {
         double[][][] clone_weights = new double[weights.length][][];
         for (int i=0; i < weights.length; i++) {
@@ -256,6 +302,12 @@ public class GradientDescent {
         addNetToExp(weights, false);
     }
 
+    
+    /** 
+     * @param gradients
+     * @param loss
+     * @return double
+     */
     private double estimateNextLoss(double[][][] gradients, double loss) {
         double sum = 0;
         for (int i=0; i < gradients.length; i++)
@@ -265,6 +317,12 @@ public class GradientDescent {
         return loss + sum;
     }
 
+    
+    /** 
+     * @param weights
+     * @param gradients
+     * @param learning_rate
+     */
     private void adjustWeights(double[][][] weights, double[][][] gradients, double learning_rate) {
         double[][][] old_weights = new double[weights.length][][];
         for (int i=0; i < weights.length; i++) {
@@ -291,9 +349,17 @@ public class GradientDescent {
         }
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getLearningRate() {
         return learning_rate;
     }
+    
+    /** 
+     * @return int
+     */
     public int getExplorationReplacements() {
         return exploration_replacements;
     }
@@ -323,10 +389,18 @@ public class GradientDescent {
         }
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean hasNewData() {
         return last_loss_index < loss_values.size();
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getIterations() {
         return iteration_count;
     }
@@ -354,15 +428,27 @@ public class GradientDescent {
     private double latest_loss_avg;
     private double latest_loss_sd;
 
+    
+    /** 
+     * @return double
+     */
     public synchronized double getCurrentLoss() {
         updateLatestData();
         return latest_loss_avg;
     }
+    
+    /** 
+     * @return double
+     */
     public synchronized double getCurrentLossSD() {
         updateLatestData();
         return latest_loss_sd;
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean isBusy() {
         return is_busy;
     }
@@ -370,6 +456,10 @@ public class GradientDescent {
     public void stop() {
         if (is_busy && !stop) stop = true;
     }
+    
+    /** 
+     * @return Tunable
+     */
     public Tunable getModel() {
         return model;
     }

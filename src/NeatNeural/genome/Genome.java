@@ -14,6 +14,10 @@ public class Genome implements java.io.Serializable{
     private Calculator calculator;
 
 
+    
+    /** 
+     * @return Calculator
+     */
     public Calculator getCalculator() {
         return calculator;
     }
@@ -22,6 +26,11 @@ public class Genome implements java.io.Serializable{
         this.calculator = new Calculator(this);
     }
 
+    
+    /** 
+     * @param input
+     * @return double[]
+     */
     public double[] calculate(double... input){
         if(this.calculator == null) generate_calculator();
         return this.calculator.calculate(input);
@@ -267,14 +276,26 @@ public class Genome implements java.io.Serializable{
         }
     }
 
+    
+    /** 
+     * @return RandomHashSet<ConnectionGene>
+     */
     public RandomHashSet<ConnectionGene> getConnections() {
         return connections;
     }
 
+    
+    /** 
+     * @return RandomHashSet<NodeGene>
+     */
     public RandomHashSet<NodeGene> getNodes() {
         return nodes;
     }
 
+    
+    /** 
+     * @return Neat
+     */
     public Neat getNeat() {
         return neat;
     }

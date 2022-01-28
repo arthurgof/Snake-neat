@@ -12,10 +12,18 @@ public class Gene implements java.io.Serializable{
 
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getInnovation_number() {
         return innovation_number;
     }
 
+    
+    /** 
+     * @param innovation_number
+     */
     public void setInnovation_number(int innovation_number) {
         this.innovation_number = innovation_number;
     }

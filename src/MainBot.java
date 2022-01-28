@@ -13,10 +13,15 @@ public class MainBot {
     private Semaphore sem2;
     private static String path = "night_test.network";
 
+    
+    /** 
+     * @param neat
+     * @param size
+     */
     public void main(Neat neat, int size){
         int numbretest = 5;
         long begin = System.currentTimeMillis();
-        ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()+1);  
+        ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()-1);  
         while(true){
             neat.printSpecies();
             sem2 = new Semaphore(-size);
@@ -43,10 +48,16 @@ public class MainBot {
         }
     }
     
+    
+    /** 
+     * @param args
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         int size =  5000;
         Neat neat = new Neat(8, 4, size);
-        //neat = Neat.load(path);
+        neat = Neat.load(path);
         new MainBot().main(neat, size);
     }
 

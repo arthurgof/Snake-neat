@@ -59,6 +59,11 @@ public class Calculator implements java.io.Serializable{
         }
     }
 
+    
+    /** 
+     * @param input
+     * @return double[]
+     */
     public double[] calculate(double... input){
 
         if(input.length != input_nodes.size()) throw new RuntimeException("Data doesnt fit");

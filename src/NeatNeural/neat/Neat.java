@@ -25,6 +25,10 @@ public class Neat implements java.io.Serializable{
 
     private double PROBABILITY_MUTATE_LINK = 0.4;
 
+    
+    /** 
+     * @param SURVIVORS
+     */
     public void setSURVIVORS(double SURVIVORS) {
         this.SURVIVORS = SURVIVORS;
     }
@@ -55,6 +59,10 @@ public class Neat implements java.io.Serializable{
         this.setSize(structures,fullyConnect);
     }
 
+    
+    /** 
+     * @return Genome
+     */
     public Genome empty_genome(){
         Genome g = new Genome(this);
         for(int i = 0; i < input_size + output_size + extra_size; i++){
@@ -63,6 +71,12 @@ public class Neat implements java.io.Serializable{
         return g;
     }
 
+    
+    /** 
+     * @param ann
+     * @param structures
+     * @return Genome
+     */
     private Genome fullyConnect(NodeGene[] ann, int [] structures){
         this.PROBABILITY_MUTATE_LINK = 0;
         Genome g = new Genome(this);
@@ -89,6 +103,12 @@ public class Neat implements java.io.Serializable{
         return g;
     }
 
+    
+    /** 
+     * @param input_size
+     * @param output_size
+     * @param clients
+     */
     public void reset(int input_size, int output_size, int clients){
         this.extra_size = 0;
         this.input_size = input_size;
@@ -119,6 +139,11 @@ public class Neat implements java.io.Serializable{
         }
     }
 
+    
+    /** 
+     * @param structures
+     * @param fullyConnect
+     */
     public void setSize(int [] structures, boolean fullyConnect){
         if(structures.length < 2) return;
         if(structures.length == 2){
@@ -179,10 +204,20 @@ public class Neat implements java.io.Serializable{
         }
     }
 
+    
+    /** 
+     * @param index
+     * @return Client
+     */
     public Client getClient(int index) {
         return clients.get(index);
     }
 
+    
+    /** 
+     * @param con
+     * @return ConnectionGene
+     */
     public static ConnectionGene getConnection(ConnectionGene con){
         ConnectionGene c = new ConnectionGene(con.getFrom(), con.getTo());
         c.setInnovation_number(con.getInnovation_number());
@@ -190,6 +225,12 @@ public class Neat implements java.io.Serializable{
         c.setEnabled(con.isEnabled());
         return c;
     }
+    
+    /** 
+     * @param node1
+     * @param node2
+     * @return ConnectionGene
+     */
     public ConnectionGene getConnection(NodeGene node1, NodeGene node2){
         ConnectionGene connectionGene = new ConnectionGene(node1, node2);
 
@@ -202,9 +243,21 @@ public class Neat implements java.io.Serializable{
 
         return connectionGene;
     }
+    
+    /** 
+     * @param node1
+     * @param node2
+     * @param index
+     */
     public void setReplaceIndex(NodeGene node1, NodeGene node2, int index){
         all_connections.get(new ConnectionGene(node1, node2)).setReplaceIndex(index);
     }
+    
+    /** 
+     * @param node1
+     * @param node2
+     * @return int
+     */
     public int getReplaceIndex(NodeGene node1, NodeGene node2){
         ConnectionGene con = new ConnectionGene(node1, node2);
         ConnectionGene data = all_connections.get(con);
@@ -212,11 +265,20 @@ public class Neat implements java.io.Serializable{
         return data.getReplaceIndex();
     }
 
+    
+    /** 
+     * @return NodeGene
+     */
     public NodeGene getNode() {
         NodeGene n = new NodeGene(all_nodes.size() + 1);
         all_nodes.add(n);
         return n;
     }
+    
+    /** 
+     * @param id
+     * @return NodeGene
+     */
     public NodeGene getNode(int id){
         if(id <= all_nodes.size()) {
             return all_nodes.get(id - 1);
@@ -312,6 +374,10 @@ public class Neat implements java.io.Serializable{
         }
     }
 
+    
+    /** 
+     * @return Client
+     */
     public Client getBest(){
         double sm = -1;
         Client best = null;
@@ -324,6 +390,11 @@ public class Neat implements java.io.Serializable{
         return best;
     }
 
+    
+    /** 
+     * @param path
+     * @throws IOException
+     */
     public void save(String path) throws IOException{
         System.out.println("Begin to save");
         FileOutputStream fileOut = new FileOutputStream(path);
@@ -334,6 +405,13 @@ public class Neat implements java.io.Serializable{
         System.out.println("File as been Save");
     }
 
+    
+    /** 
+     * @param path
+     * @return Neat
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static Neat load(String path) throws IOException, ClassNotFoundException{
         System.out.println("Begin to load");
         FileInputStream fileIn = new FileInputStream(path);
@@ -346,90 +424,174 @@ public class Neat implements java.io.Serializable{
         return savefile;
     }
 
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         Neat neat = new Neat(10,1,2);
         neat.evolve();
     }
 
+    
+    /** 
+     * @return RandomHashSet<Client>
+     */
     public RandomHashSet<Client> getClients() {
         return clients;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getCP() {
         return CP;
     }
 
+    
+    /** 
+     * @param CP
+     */
     public void setCP(double CP) {
         this.CP = CP;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getC1() {
         return C1;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getC2() {
         return C2;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getC3() {
         return C3;
     }
 
 
+    
+    /** 
+     * @return double
+     */
     public double getWEIGHT_SHIFT_STRENGTH() {
         return WEIGHT_SHIFT_STRENGTH;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getWEIGHT_RANDOM_STRENGTH() {
         return WEIGHT_RANDOM_STRENGTH;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getPROBABILITY_MUTATE_LINK() {
         return PROBABILITY_MUTATE_LINK;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getPROBABILITY_MUTATE_NODE() {
         return PROBABILITY_MUTATE_NODE;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getPROBABILITY_MUTATE_WEIGHT_SHIFT() {
         return PROBABILITY_MUTATE_WEIGHT_SHIFT;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getPROBABILITY_MUTATE_WEIGHT_RANDOM() {
         return PROBABILITY_MUTATE_WEIGHT_RANDOM;
     }
 
+    
+    /** 
+     * @return double
+     */
     public double getPROBABILITY_MUTATE_TOGGLE_LINK() {
         return PROBABILITY_MUTATE_TOGGLE_LINK;
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getOutput_size() {
         return output_size;
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getInput_size() {
         return input_size;
     }
 
 
 
+    
+    /** 
+     * @param PROBABILITY_MUTATE_LINK
+     */
     public void setPROBABILITY_MUTATE_LINK(double PROBABILITY_MUTATE_LINK) {
         this.PROBABILITY_MUTATE_LINK = PROBABILITY_MUTATE_LINK;
     }
 
+    
+    /** 
+     * @param PROBABILITY_MUTATE_NODE
+     */
     public void setPROBABILITY_MUTATE_NODE(double PROBABILITY_MUTATE_NODE) {
         this.PROBABILITY_MUTATE_NODE = PROBABILITY_MUTATE_NODE;
     }
 
+    
+    /** 
+     * @param PROBABILITY_MUTATE_WEIGHT_SHIFT
+     */
     public void setPROBABILITY_MUTATE_WEIGHT_SHIFT(double PROBABILITY_MUTATE_WEIGHT_SHIFT) {
         this.PROBABILITY_MUTATE_WEIGHT_SHIFT = PROBABILITY_MUTATE_WEIGHT_SHIFT;
     }
 
+    
+    /** 
+     * @param PROBABILITY_MUTATE_WEIGHT_RANDOM
+     */
     public void setPROBABILITY_MUTATE_WEIGHT_RANDOM(double PROBABILITY_MUTATE_WEIGHT_RANDOM) {
         this.PROBABILITY_MUTATE_WEIGHT_RANDOM = PROBABILITY_MUTATE_WEIGHT_RANDOM;
     }
 
+    
+    /** 
+     * @param PROBABILITY_MUTATE_TOGGLE_LINK
+     */
     public void setPROBABILITY_MUTATE_TOGGLE_LINK(double PROBABILITY_MUTATE_TOGGLE_LINK) {
         this.PROBABILITY_MUTATE_TOGGLE_LINK = PROBABILITY_MUTATE_TOGGLE_LINK;
     }

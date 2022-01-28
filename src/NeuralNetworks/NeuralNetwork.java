@@ -22,6 +22,10 @@ public class NeuralNetwork implements Tunable {
 	
 	private Layer[] hidden_layers;
 
+	
+	/** 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		int [] structure = new int[]{24, 18, 18, 4};
 		Activation [] function = new Activation[]{SIGMOID, SIGMOID, SIGMOID};
@@ -35,6 +39,11 @@ public class NeuralNetwork implements Tunable {
 		System.out.println(Arrays.toString(result));
 	}
 	
+	
+	/** 
+	 * @param length
+	 * @return boolean[]
+	 */
 	private static boolean[] getFilled(int length) {
 		boolean[] result = new boolean[length];
 		Arrays.fill(result, true);
@@ -56,6 +65,10 @@ public class NeuralNetwork implements Tunable {
 			hidden_layers[a] = new Layer(network_structure[a], network_structure[b], bias_inclusion[a], activation_functions[a]);
 	}
 	
+	
+	/** 
+	 * @return NeuralNetwork
+	 */
 	@Override
 	public NeuralNetwork clone() {
 		NeuralNetwork clone = new NeuralNetwork(getLayerStructure(), getBiasInclusion(), getActivations());
@@ -63,6 +76,11 @@ public class NeuralNetwork implements Tunable {
 		return clone;
 	}
 	
+	
+	/** 
+	 * @param file
+	 * @throws IOException
+	 */
 	public void storeToFile(File file) throws IOException {
 		storeToFile(new NeuralNetwork[] {this}, file);
 	}
@@ -82,6 +100,12 @@ public class NeuralNetwork implements Tunable {
 		out.close();
 	}
 	
+	
+	/** 
+	 * @param file
+	 * @return NeuralNetwork[]
+	 * @throws IOException
+	 */
 	public static NeuralNetwork[] readFromFile(File file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		List<StringBuilder> blocks = new ArrayList<>();
@@ -129,6 +153,11 @@ public class NeuralNetwork implements Tunable {
 		return result;
 	}
 	
+	
+	/** 
+	 * @param network_string
+	 * @return NeuralNetwork
+	 */
 	public static NeuralNetwork parseNetwork(String network_string) {
 		List<Activation> activations = new ArrayList<>();
 		List<Boolean> biases = new ArrayList<>();
@@ -224,6 +253,10 @@ public class NeuralNetwork implements Tunable {
 		initializeRandomWeights(min, max, System.currentTimeMillis());
 	}
 	
+	
+	/** 
+	 * @param weights
+	 */
 	public void loadWeights(double[][][] weights) {
 		boolean incorrect_size = false;
 		if (weights.length != hidden_layers.length) incorrect_size = true;
@@ -251,6 +284,10 @@ public class NeuralNetwork implements Tunable {
 		return result;
 	}
 	
+	
+	/** 
+	 * @param weights
+	 */
 	public void setAllWeights(double[][][] weights) {
 		for (int i=0; i < hidden_layers.length; i++) {
 			for (int j=0; j < hidden_layers[i].weights.length; j++)
@@ -259,6 +296,11 @@ public class NeuralNetwork implements Tunable {
 		}
 	}
 	
+	
+	/** 
+	 * @param input
+	 * @return double[]
+	 */
 	public double[] forwardProp(double[] input) {
 		int input_size = getInputSize();
 		if (input.length != input_size) throw new IllegalArgumentException
@@ -270,6 +312,11 @@ public class NeuralNetwork implements Tunable {
 	}
 	
 
+	
+	/** 
+	 * @param input
+	 * @return double[]
+	 */
 	public double[] computeOutput(double[] input) {
 		return forwardProp(input);
 	}
@@ -316,6 +363,11 @@ public class NeuralNetwork implements Tunable {
 		return gradients;
 	}
 	
+	
+	/** 
+	 * @param precision
+	 * @return String
+	 */
 	public String toString(int precision) {
 		StringWriter str_wr = new StringWriter();
 		PrintWriter out = new PrintWriter(str_wr);
@@ -358,15 +410,31 @@ public class NeuralNetwork implements Tunable {
 		return toString(20);
 	}
 	
+	
+	/** 
+	 * @return int
+	 */
 	public int getInputSize() {
 		return hidden_layers[0].getInputSize();
 	}
+	
+	/** 
+	 * @return int
+	 */
 	public int getOutputSize() {
 		return hidden_layers[hidden_layers.length-1].getOutputSize();
 	}
+	
+	/** 
+	 * @return int
+	 */
 	public int getLayerCount() {
 		return hidden_layers.length;
 	}
+	
+	/** 
+	 * @return int[]
+	 */
 	public int[] getLayerStructure() {
 		int[] structure = new int[hidden_layers.length+1];
 		structure[0] = getInputSize();
@@ -374,12 +442,20 @@ public class NeuralNetwork implements Tunable {
 			structure[l+1] = hidden_layers[l].getOutputSize();
 		return structure;
 	}
+	
+	/** 
+	 * @return boolean[]
+	 */
 	public boolean[] getBiasInclusion() {
 		boolean[] bias = new boolean[hidden_layers.length];
 		for (int i=0; i < bias.length; i++)
 			bias[i] = hidden_layers[i].hasBias();
 		return bias;
 	}
+	
+	/** 
+	 * @return Activation[]
+	 */
 	public Activation[] getActivations() {
 		Activation[] activations = new Activation[hidden_layers.length];
 		for (int i=0; i < activations.length; i++)
