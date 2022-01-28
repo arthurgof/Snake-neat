@@ -18,7 +18,6 @@ public class Board {
     private int [] food;
     private boolean bots;
     private final Genome ann;
-    private boolean foodOnly = true;
     private Random rand;
 
 
@@ -333,7 +332,7 @@ public class Board {
 
     
     /** 
-     * @param headd
+     * @param head
      * @return ArrayList<int[]>
      */
     private ArrayList<int []> generatedirection(int [] headd){
@@ -343,16 +342,5 @@ public class Board {
         heads.add(new int []{headd[0],headd[1]+1});
         heads.add(new int []{headd[0],headd[1]-1});
         return heads;
-    }
-
-
-    
-    /** 
-     * @param a
-     * @return Board
-     */
-    public Board setfoodOnly(boolean a){
-        this.foodOnly = a;
-        return this;
     }
 }

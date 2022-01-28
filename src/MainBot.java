@@ -8,10 +8,9 @@ import java.util.concurrent.Semaphore;
 
 
 public class MainBot {
-    public boolean foodOnly = true;
     private long timeSave = 900000;
     private Semaphore sem2;
-    private static String path = "night_test.network";
+    private static String path = "libraries.network";
 
     
     /** 

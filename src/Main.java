@@ -13,7 +13,7 @@ public class Main {
         //new Board().gameLoop();
         Neat now = Neat.load("night_test.network");
         System.out.println(now.getBest().getScore());
-        System.out.println(new Board(40,40,now.getBest().getGenome()).setfoodOnly(false).gameLoop());
+        System.out.println(new Board(40,40,now.getBest().getGenome()).gameLoop());
         System.exit(10);
     }
 }
