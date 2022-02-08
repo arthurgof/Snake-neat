@@ -108,7 +108,7 @@ public class BoardNotUI {
 
     
     /** 
-     * @return int
+     * @return int corresponding to the score of the player
      */
     public int gameLoop() {
         int size = 1;
@@ -166,7 +166,7 @@ public class BoardNotUI {
      * @return double[]
      */
     private double [] obtainInput(){
-        double [] input = new double[8];
+        double [] input = new double[9];
         int headx = snakes.getLast()[0];
         int heady = snakes.getLast()[1];
         if (headx > food[0])
@@ -209,6 +209,7 @@ public class BoardNotUI {
             }
             
         }
+        input[8] = 1;
         return input;
     }
 

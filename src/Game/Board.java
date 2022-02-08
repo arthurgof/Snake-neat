@@ -220,7 +220,7 @@ public class Board {
      * @return double[]
      */
     private double [] obtainInput(){
-        double [] input = new double[8];
+        double [] input = new double[9];
         int headx = snakes.getLast()[0];
         int heady = snakes.getLast()[1];
         if (headx > food[0])
@@ -263,6 +263,7 @@ public class Board {
             }
             
         }
+        input[8] = 1;
         return input;
     }
 

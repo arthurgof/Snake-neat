@@ -20,7 +20,7 @@ public class MainBot {
     public void main(Neat neat, int size){
         int numbretest = 5;
         long begin = System.currentTimeMillis();
-        ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()-1);  
+        ExecutorService pool = Executors.newFixedThreadPool((int) ((int)Runtime.getRuntime().availableProcessors()*(2./3)));  
         while(true){
             neat.printSpecies();
             sem2 = new Semaphore(-size);

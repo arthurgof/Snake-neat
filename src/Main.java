@@ -1,5 +1,7 @@
 import Game.Board;
 import NeatNeural.neat.Neat;
+import NeatNeural.visual.Frame;
+
 import java.io.IOException;
 
 public class Main {
@@ -9,11 +11,10 @@ public class Main {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        //new Board().gameLoop();
-        Neat now = Neat.load("night_test.network");
+    public static void main(String[] args) throws IOException, ClassNotFoundException{
+        Neat now = Neat.load("libraries.network");
         System.out.println(now.getBest().getScore());
         System.out.println(new Board(40,40,now.getBest().getGenome()).gameLoop());
-        System.exit(10);
+        new Frame(now.getBest().getGenome());
     }
 }
